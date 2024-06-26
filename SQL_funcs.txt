@@ -1,0 +1,93 @@
+Создание таблицы:
+
+create table "Role"
+(
+  RoleID serial primary key,
+  RoleName varchar(100) not null
+);
+
+Импорт таблицы .csv:
+
+copy "User"
+from 'C:\Users\User.csv'
+with (format csv,
+	  header,
+	  delimiter ';',
+	  encoding 'UTF-8')
+
+
+Функция добавления строки в таблицу:
+
+public - название схемы
+productmaterial_k_import - название таблицы
+add_new_row - название функции
+
+
+CREATE OR REPLACE FUNCTION public.add_new_row(product_name character varying, material_name character varying, material_quantity integer)
+ RETURNS void
+ LANGUAGE sql
+AS $function$
+	INSERT INTO public.productmaterial_k_import ("Продукция", "Наименование материала", "Необходимое количество материала")
+	VALUES (product_name, material_name, material_quantity);
+$function$
+;
+
+Применение функции:
+
+SELECT add_new_row('Product1', 'MaterialA', 10);
+
+fishing - название схемы
+"Adress" - название таблицы
+add_adress - название функции
+
+CREATE OR REPLACE FUNCTION fishing.add_address(
+    p_pickuppointnumber int,
+    p_addresspickuppoint varchar(100)
+)
+RETURNS void
+LANGUAGE sql
+AS $function$
+    INSERT INTO fishing."Adress" (pickuppointnumber, adresspickuppoint)
+    VALUES (p_pickuppointnumber, p_addresspickuppoint);
+$function$
+;
+
+Применение функции:
+
+SELECT fishing.add_address(37, '123 Main Street');
+
+Функция удаления строки из таблицы:
+
+CREATE OR REPLACE FUNCTION fishing.delete_address(
+    p_pickuppointnumber int
+)
+RETURNS void
+LANGUAGE sql
+AS $function$
+    DELETE FROM fishing."Adress"
+    WHERE pickuppointnumber = p_pickuppointnumber;
+$function$
+;
+
+Применение функции:
+
+SELECT fishing.delete_address(37);
+
+Функция обновления строки в таблице:
+
+CREATE OR REPLACE FUNCTION fishing.update_address(
+    p_pickuppointnumber int,
+    p_new_addresspickuppoint varchar(100)
+)
+RETURNS void
+LANGUAGE sql
+AS $function$
+    UPDATE fishing."Adress"
+    SET adresspickuppoint = p_new_addresspickuppoint
+    WHERE pickuppointnumber = p_pickuppointnumber;
+$function$
+;
+
+Применение функции:
+
+SELECT fishing.update_address(37, '456 Oak Street');
