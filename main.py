@@ -39,6 +39,8 @@ def connect_to_db(ui_dbview):
     username = 'postgres'
     password = 'argemtum'
     port = 5432
+
+    # Вспомогательная переменная, позволяющая выбирать необходимую таблицу из базы данных
     selected_table = ui_dbview.choose_db_table.currentText()
 
     try:
@@ -56,7 +58,8 @@ def connect_to_db(ui_dbview):
         cursor.execute(query)
         rows = cursor.fetchall()
         columns = [desc[0] for desc in cursor.description]
-
+        
+        # Создание модели данных для отображения в таблице
         model = QStandardItemModel()
         model.setHorizontalHeaderLabels(columns)
 
@@ -93,6 +96,8 @@ def go_to_view_db():
     tables = ["User", "Order", "Product", "OrderProduct", "Adress", "Role"]
     ui_dbview.choose_db_table.addItems(tables)
 
+# Вывод CAPTCHA, главного меню и второстепенных окон производится в отдельно созданном файле, с целью структурирования кода.
+# Такой подход позволяет сделать код более организованным и читабельным.
 def show_main_app():
     """
     Отображает основное окно приложения.
