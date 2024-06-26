@@ -72,6 +72,14 @@ class CaptchaApp(QWidget):
         draw = ImageDraw.Draw(image)
         draw.text((10, 5), self.captcha_text, font=font, fill=(0, 0, 0))
 
+        # Добавление зачеркивания символов
+        for char in self.captcha_text:
+            x = random.randint(0, 150)
+            y = random.randint(0, 50)
+            x_end = x + random.randint(10, 20)
+            y_end = y + random.randint(-10, 10)
+            draw.line([(x, y), (x_end, y_end)], fill=(0, 0, 0), width=3)
+
         byte_arr = io.BytesIO()
         image.save(byte_arr, format='PNG')
         byte_arr.seek(0)
