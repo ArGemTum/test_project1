@@ -34,14 +34,12 @@ pip install -r requirements.txt
 ### 3. Установка Ollama
 
 ```markdown
-Вот пример функции для вычисления факториала:
+Ollama устанавливается отдельно (не через pip):
 ```
 
-Ollama устанавливается отдельно (не через pip):
+*Windows/macOS/Linux: Скачайте с ollama.ai
 
-Windows/macOS/Linux: Скачайте с ollama.ai
-
-После установки запустите Ollama (фоновый сервис)
+*После установки запустите Ollama (фоновый сервис)
 
 ### 4. Загрузка моделей
 
@@ -60,6 +58,7 @@ ollama pull nomic-embed-text
 
 ```markdown
 Запустите скрипт для обработки данных и создания индексов:
+```
 
 ```python
 python rag.py
