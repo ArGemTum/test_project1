@@ -17,6 +17,27 @@
 | **Обработка данных** | Pandas, NumPy | Анализ и обработка данных |
 | **Дополнительно** | Sentence Transformers | Re-ranking результатов |
 
+
+## Структура проекта
+
+
+├── rag.py                 # Индексация данных
+├── rag_ask.py             # Основная логика ответов
+├── server.py              # FastAPI сервер
+├── bm25_index.py          # BM25 индексация
+├── faiss_index.py         # FAISS индексация
+├── chunking.py            # Разбиение текста на чанки
+├── memory_store.py        # Хранение истории
+├── multi_query.py         # Генерация альтернативных запросов
+├── trend_analysis.py      # Анализ трендов
+├── requirements.txt       # Python зависимости
+├── news_dataset.csv       # Исходные данные (нужен)
+├── chroma_db/             # ChromaDB хранилище (создаётся)
+├── bm25.pkl               # BM25 индекс (создаётся)
+├── faiss.index            # FAISS индекс (создаётся)
+├── faiss_docs.pkl         # Метаданные (создаются)
+└── memory.json            # История запросов (создаётся)
+
 ## Установка
 
 ### 1. Клонирование репозитория
@@ -107,7 +128,6 @@ curl -X POST http://localhost:8000/chat \
   -d '{"message": "Какой сейчас курс доллара?"}'
 ```
 
-## Архитектура системы:
 ## 🏗️ Архитектура системы
 
 ```mermaid
@@ -118,7 +138,7 @@ graph TB
     
     subgraph Backend
         API[FastAPI Server<br/>:8000]
-        RAG[RAG Core<br/>ask_rag]
+        RAG[RAG Core<br/>ask_rag_web]
     end
     
     subgraph Search
