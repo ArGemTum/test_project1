@@ -37,9 +37,9 @@ pip install -r requirements.txt
 Ollama устанавливается отдельно (не через pip):
 ```
 
-*Windows/macOS/Linux: Скачайте с ollama.ai
+* Windows/macOS/Linux: Скачайте с ollama.ai
 
-*После установки запустите Ollama (фоновый сервис)
+* После установки запустите Ollama (фоновый сервис)
 
 ### 4. Загрузка моделей
 
@@ -56,9 +56,8 @@ ollama pull nomic-embed-text
 
 ### Шаг 1: Инициализация базы данных
 
-```markdown
 Запустите скрипт для обработки данных и создания индексов:
-```
+
 
 ```python
 python rag.py
@@ -109,24 +108,42 @@ curl -X POST http://localhost:8000/chat \
 ```
 
 ## Архитектура системы:
-┌─────────────┐     ┌──────────────┐     ┌─────────────┐
-│   Frontend  │────▶│   FastAPI    │────▶│  RAG Core   │
-│  (HTTP 5500)│     │  (Port 8000) │     │  (ask_rag)  │
-└─────────────┘     └──────────────┘     └──────┬──────┘
-                                                 │
-                    ┌────────────────────────────┼────────────────────────────┐
-                    │                            │                            │
-                    ▼                            ▼                            ▼
-            ┌───────────────┐            ┌─────────────┐            ┌─────────────┐
-            │    ChromaDB   │            │    FAISS    │            │    BM25     │
-            │  (векторная   │            │  (индекс    │            │  (текстовый │
-            │     БД)       │            │   векторов) │            │   поиск)    │
-            └───────────────┘            └─────────────┘            └─────────────┘
-                    │                            │                            │
-                    └────────────────────────────┼────────────────────────────┘
-                                                 │
-                                                 ▼
-                                        ┌─────────────────┐
-                                        │   Ollama LLM    │
-                                        │  (llama3.1:8b)  │
-                                        └─────────────────┘
+## 🏗️ Архитектура системы
+
+```mermaid
+graph TB
+    subgraph Client
+        FE[Frontend<br/>HTTP :5500]
+    end
+    
+    subgraph Backend
+        API[FastAPI Server<br/>:8000]
+        RAG[RAG Core<br/>ask_rag]
+    end
+    
+    subgraph Search
+        CH[ChromaDB<br/>Vector DB]
+        FA[FAISS<br/>Vector Index]
+        BM[BM25<br/>Text Search]
+    end
+    
+    subgraph LLM
+        OL[Ollama<br/>llama3.1:8b]
+    end
+    
+    FE -->|POST /chat| API
+    API --> RAG
+    
+    RAG -->|эмбеддинги| CH
+    RAG -->|векторы| FA
+    RAG -->|токены| BM
+    
+    CH -->|контекст| RAG
+    FA -->|контекст| RAG
+    BM -->|контекст| RAG
+    
+    RAG -->|prompt| OL
+    OL -->|ответ| RAG
+    RAG -->|response| API
+    API --> FE
+```
